@@ -1,3 +1,11 @@
+#
+# Google Hash Code 2017 - Practice Round
+#
+# Copyright (c) 2017 Team "Makineo"
+#
+# Version 1.0
+#
+
 
 import numpy as np
 import math
@@ -5,6 +13,12 @@ import sys
 
 
 def read_file(filename):
+    '''
+    Read the file.
+    Return the pizza as a binary matrix: Tomatoes = 1, Mushrooms = 0
+    Also, return the minimum ingredients required for each slice,
+    and the maximum cells allowed for each slice.
+    '''
     
     with open(filename, 'r') as f:
         line = f.readline()
@@ -42,19 +56,20 @@ class PizzaCutter:
     
     def satisfyH(self, R, C):
         '''
-        Check if the slice satisfy the H condition
+        Check if the slice satisfies the H condition.
+        Also, prevent the slice to include cells of other slices.
         '''
         legal = False
         if self.isInside(R, C):
-            slic = self.pizza[R[0]:R[1]+1, C[0]:C[1]+1]
-            #area = (R[1] - R[0] + 1) * (C[1] - C[0] + 1); # area of the slice
+            slic = self.pizza[R[0]:R[1]+1, C[0]:C[1]+1] 
             if slic.size <= self.H and not math.isnan(slic.sum()):
+                # if there's one or more cells with NaN value, the sum is NaN
                 legal = True    
         return legal
     
     def satisfyL(self, R, C):
         '''
-        Check if the slice satisfy the L condition
+        Check if the slice satisfies the L condition
         '''
         rect = self.pizza[R[0]:(R[1]+1), C[0]:(C[1]+1)] # slice of pizza
         tomatoes = np.sum(rect)
@@ -122,11 +137,17 @@ class PizzaCutter:
         return success, Rfinal, Cfinal
     
     def update_pizza(self, R, C):
+        '''
+        Fill with NaN a slice of the pizza
+        '''
         slic = np.empty([R[1]-R[0]+1, C[1]-C[0]+1])
         slic[:] = None
         self.pizza[R[0]:R[1]+1, C[0]:C[1]+1] = slic
     
     def start(self):
+        '''
+        Try to generate a slice from each cell of the pizza
+        '''
         self.slices = []
         for row in range(self.pizza.shape[0]):
             for col in range(self.pizza.shape[1]):
@@ -140,6 +161,9 @@ class PizzaCutter:
 
 
 def write_file(cutter, filename):
+    '''
+    Write the output file
+    '''
     with open(filename, 'w') as f:
         f.write('{}\n'.format(len(cutter.slices)))
         for slic in cutter.slices:
@@ -164,6 +188,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
