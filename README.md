@@ -4,8 +4,8 @@ This is a solution for the Practice Round in Google Hash Code 2017 developed by 
 
 The problem statement is in the file "pizza.pdf".
 
-To run the program with the input file *'small.in'*:
+To run the program with the input file *small.in*:
 
-`$ python pizzaMakineo files_in/small.in outputfile`
+`$ python pizzaMakineo.py files_in/small.in outputfile`
 
-**Score: 749873**
+**Score: 749873 points**
