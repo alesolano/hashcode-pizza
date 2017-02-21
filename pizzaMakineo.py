@@ -71,9 +71,9 @@ class PizzaCutter:
         '''
         Check if the slice satisfies the L condition
         '''
-        rect = self.pizza[R[0]:(R[1]+1), C[0]:(C[1]+1)] # slice of pizza
-        tomatoes = np.sum(rect)
-        mushrooms = np.size(rect) - tomatoes
+        slic = self.pizza[R[0]:(R[1]+1), C[0]:(C[1]+1)] # slice of pizza
+        tomatoes = np.sum(slic)
+        mushrooms = np.size(slic) - tomatoes
         
         if (tomatoes >= self.L) and (mushrooms >= self.L):
             return True
@@ -81,7 +81,7 @@ class PizzaCutter:
             return False
     
     @staticmethod
-    def enlarge(R, C, direction):
+    def enlargeSlice(R, C, direction):
         '''
         Enlarge the pizza to the direction given
         '''
@@ -102,9 +102,9 @@ class PizzaCutter:
         return newR, newC, nextDir
     
     
-    def newMaxSlice(self, point):
+    def newSlice(self, point):
         '''
-        Take a seed point and returns the maximum slice if possible.
+        Take a seed point and returns a slice if possible.
         point = [row, column]
         
         The returned slices is defined by R and C
@@ -121,8 +121,8 @@ class PizzaCutter:
             legal = False
             counter = 0
             while(counter < 3):
-                # Try enlarge the slice by
-                R, C, direction = self.enlarge(Rfinal, Cfinal, direction)
+                # Try enlarge the slice by all four directions
+                R, C, direction = self.enlargeSlice(Rfinal, Cfinal, direction)
                 if self.satisfyH(R, C):
                     legal = True
                     Rfinal = R
@@ -136,7 +136,7 @@ class PizzaCutter:
         success = self.satisfyL(Rfinal, Cfinal)
         return success, Rfinal, Cfinal
     
-    def update_pizza(self, R, C):
+    def updatePizza(self, R, C):
         '''
         Fill with NaN a slice of the pizza
         '''
@@ -152,11 +152,11 @@ class PizzaCutter:
         for row in range(self.pizza.shape[0]):
             for col in range(self.pizza.shape[1]):
                 if not math.isnan(self.pizza[row][col]):
-                    success, R, C = self.newMaxSlice([row,col])
+                    success, R, C = self.newSlice([row,col])
                     if success:
                         print("Success")
                         self.slices += [[R[0], C[0], R[1], C[1]]]
-                        self.update_pizza(R, C)
+                        self.updatePizza(R, C)
         print(self.pizza)
 
 
